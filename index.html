@@ -1,1366 +1,836 @@
 <!DOCTYPE html>
-<html dir="rtl" lang="he" class="scroll-smooth">
+
+<html dir="rtl" lang="he">
 <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
-  <title>מניות מומנטום לפי תתי־סקטורים | פלטפורמת עבודה</title>
-  
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Google Fonts: Rubik -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-  
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>מניות מומנטום לפי תתי־סקטורים</title>
+<style>
+  :root {
+    --text: #111827;
+    --muted: #4b5563;
+    --line: #d1d5db;
+    --soft: #f3f4f6;
+    --blue: #1d4ed8;
+    --bg: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.45;
+  }
+  .page {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 34px 42px;
+  }
+  header {
+    border-bottom: 3px solid #111827;
+    padding-bottom: 18px;
+    margin-bottom: 24px;
+  }
+  h1 {
+    margin: 0 0 8px;
+    font-size: 30px;
+    line-height: 1.15;
+    font-weight: 900;
+  }
+  .subtitle {
+    font-size: 16px;
+    color: var(--muted);
+    margin: 0;
+  }
+  .note {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin: 18px 0 24px;
+    color: #1e3a8a;
+    font-size: 14px;
+  }
+  .core {
+    background: #f8fafc;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 24px;
+    break-inside: avoid;
+  }
+  .core h2 {
+    margin: 0 0 10px;
+    font-size: 20px;
+  }
+  .sector {
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 15px 16px;
+    margin-bottom: 14px;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .sector-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 7px;
+  }
+  .num {
+    direction: ltr;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    height: 26px;
+    border-radius: 999px;
+    background: #111827;
+    color: white;
+    font-weight: 800;
+    font-size: 12px;
+  }
+  h2 {
+    margin: 0;
+    font-size: 19px;
+    font-weight: 900;
+    direction: ltr;
+    text-align: right;
+  }
+  p {
+    margin: 0 0 11px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .tickers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    direction: ltr;
+    justify-content: flex-end;
+  }
+  .ticker {
+    display: inline-block;
+    border: 1px solid #cbd5e1;
+    background: var(--soft);
+    border-radius: 999px;
+    padding: 5px 9px;
+    font-weight: 800;
+    font-size: 13px;
+    color: #111827;
+    text-decoration: none;
+  }
+  .ticker:hover {
+    background: #dbeafe;
+    border-color: #93c5fd;
+    color: #1d4ed8;
+  }
+  footer {
+    border-top: 1px solid var(--line);
+    margin-top: 28px;
+    padding-top: 14px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .print-btn {
+    position: fixed;
+    left: 18px;
+    bottom: 18px;
+    background: #111827;
+    color: white;
+    border: 0;
+    border-radius: 999px;
+    padding: 12px 18px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0,0,0,.18);
+  }
+  @media print {
+    body { background: white; }
+    .page { max-width: none; padding: 14mm 12mm; }
+    .print-btn { display: none; }
+    header { margin-bottom: 14px; }
+    h1 { font-size: 25px; }
+    .sector { margin-bottom: 9px; padding: 11px 12px; }
+    h2 { font-size: 16px; }
+    p { font-size: 12px; margin-bottom: 8px; }
+    .ticker { font-size: 11px; padding: 4px 7px; }
+    .note { font-size: 12px; padding: 10px 12px; }
+    @page { size: A4; margin: 10mm; }
+  }
 
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Rubik', 'sans-serif'],
-          }
-        }
-      }
-    }
-  </script>
 
-  <style>
-    /* הגדרת משתני עיצוב מותאמים אישית למניעת הבהובים ומעבר חלק לחלוטין */
-    :root {
-      --bg-page: #f8fafc;
-      --bg-card: #ffffff;
-      --border-color: #e2e8f0;
-      --text-main: #0f172a;
-      --text-muted: #475569;
-      
-      --ticker-bg: #f1f5f9;
-      --ticker-border: #cbd5e1;
-      --ticker-text: #0f172a;
-      --ticker-hover-bg: #dbeafe;
-      --ticker-hover-border: #93c5fd;
-      --ticker-hover-text: #1d4ed8;
-    }
-
-    .dark {
-      --bg-page: #0f172a;
-      --bg-card: #1e293b;
-      --border-color: #334155;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      
-      --ticker-bg: #334155;
-      --ticker-border: #475569;
-      --ticker-text: #f1f5f9;
-      --ticker-hover-bg: #1e3a8a;
-      --ticker-hover-border: #3b82f6;
-      --ticker-hover-text: #60a5fa;
-    }
-
-    body {
-      font-family: 'Rubik', sans-serif;
-      background-color: var(--bg-page);
-      color: var(--text-main);
-      transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .custom-card {
-      background-color: var(--bg-card);
-      border-color: var(--border-color);
-    }
-
-    /* עיצוב כפתורי המניות */
-    .ticker {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.5rem 0.85rem;
-      font-size: 0.8rem;
-      font-weight: 800;
-      font-family: monospace;
-      border-radius: 0.75rem;
-      border-width: 1px;
-      direction: ltr;
-      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.02);
-      background-color: var(--ticker-bg);
-      border-color: var(--ticker-border);
-      color: var(--ticker-text);
-      transition: all 0.2s ease;
-    }
-    
-    .ticker:hover {
-      background-color: var(--ticker-hover-bg);
-      border-color: var(--ticker-hover-border);
-      color: var(--ticker-hover-text);
-      transform: translateY(-1.5px);
-    }
-
-    /* סימון מניות מחופשות */
-    .ticker-highlight {
-      background-color: #eab308 !important;
-      border-color: #ca8a04 !important;
-      color: #000000 !important;
-      animation: pulseHighlight 1.5s infinite ease-in-out;
-    }
-    
-    @keyframes pulseHighlight {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
-
-    /* הסתרת סרגל גלילה אופקי בניווט מהיר */
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-
-    @media print {
-      .no-print {
-        display: none !important;
-      }
-      body {
-        background: white !important;
-        color: black !important;
-      }
-      .custom-card {
-        break-inside: avoid;
-        border: 1px solid #cbd5e1 !important;
-        box-shadow: none !important;
-        background: transparent !important;
-      }
-    }
-  </style>
+  html { scroll-behavior: smooth; }
+  .core-links .ticker { cursor: pointer; }
+  .back-wrap { margin-top: 10px; text-align: left; direction: rtl; }
+  .back-link {
+    display: inline-block;
+    font-size: 12px;
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: 700;
+  }
+  .back-link:hover { text-decoration: underline; }
+  .footer-meta {
+    border-top: 1px solid var(--line);
+    margin-top: 28px;
+    padding-top: 14px;
+    color: var(--muted);
+    font-size: 12px;
+    text-align: center;
+  }
+  .footer-disclosure {
+    margin-top: 6px;
+    font-size: 11px;
+    line-height: 1.4;
+    text-align: center;
+  }
+</style>
 </head>
-<body class="min-h-screen pb-24">
+<body>
+<button class="print-btn" onclick="window.print()">שמירה ל־PDF</button>
+<div class="page" id="top">
+<header>
+<h1>מניות מומנטום לפי תתי־סקטורים</h1>
+<p class="subtitle">רשימת עבודה למסחר יחסי: מניה → תת־סקטור → מניות שנוטות לזוז יחד, עודכן 23.06.2026</p>
+</header>
+<div class="note">רשימת עבודה למסחר מומנטום לפי תתי־סקטורים. לחיצה על קבוצה מרכזית מעבירה ישירות לרשימת המניות הרלוונטית. לחיצה על סימבול פותחת את הגרף ב־TradingView.</div>
+<section class="core" id="core-groups">
+<h2>הקבוצות המרכזיות ביותר למומנטום</h2>
+<div class="tickers core-links"><a class="ticker" href="#sector-01">AI Infrastructure / Data Centers</a>
+<a class="ticker" href="#sector-02">AI Miners / HPC Pivot</a>
+<a class="ticker" href="#sector-03">Bitcoin Miners</a>
+<a class="ticker" href="#sector-04">Crypto Infrastructure</a>
+<a class="ticker" href="#sector-05">Quantum Computing</a>
+<a class="ticker" href="#sector-06">Nuclear / SMR</a>
+<a class="ticker" href="#sector-07">Uranium / Nuclear Fuel</a>
+<a class="ticker" href="#sector-08">Power / Data Centers</a>
+<a class="ticker" href="#sector-09">Semiconductors</a>
+<a class="ticker" href="#sector-10">DRAM / HBM / Memory</a>
+<a class="ticker" href="#sector-12">Small Cap AI Momentum</a>
+<a class="ticker" href="#sector-16">Space</a>
+<a class="ticker" href="#sector-17">eVTOL / Air Mobility</a>
+<a class="ticker" href="#sector-18">Drones / Defense Tech</a>
+<a class="ticker" href="#sector-20">EV / Batteries / Autonomy</a>
+<a class="ticker" href="#sector-21">Biotech Momentum</a>
+<a class="ticker" href="#sector-24">Meme / High Volatility</a>
+<a class="ticker" href="#sector-25">IPO / Recent Momentum</a>
+<a class="ticker" href="#sector-27">Fintech / Brokers / Payments</a>
+<a class="ticker" href="#sector-30">Copper / Metals</a></div>
+</section>
+<section class="sector" id="sector-01">
+<div class="sector-head">
+<span class="num">01</span>
+<h2>AI Infrastructure / Data Centers</h2>
+</div>
+<p>נעות סביב AI capex, דאטה סנטרים, שרתים, קירור, רשתות וחשמל.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=NVDA" rel="noopener noreferrer" target="_blank">NVDA</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=AVGO" rel="noopener noreferrer" target="_blank">AVGO</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=VRT" rel="noopener noreferrer" target="_blank">VRT</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=ANET" rel="noopener noreferrer" target="_blank">ANET</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=DELL" rel="noopener noreferrer" target="_blank">DELL</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=SMCI" rel="noopener noreferrer" target="_blank">SMCI</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=MRVL" rel="noopener noreferrer" target="_blank">MRVL</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=ORCL" rel="noopener noreferrer" target="_blank">ORCL</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=APLD" rel="noopener noreferrer" target="_blank">APLD</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=NBIS" rel="noopener noreferrer" target="_blank">NBIS</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=CRWV" rel="noopener noreferrer" target="_blank">CRWV</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=IBM" rel="noopener noreferrer" target="_blank">IBM</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=CRDO" rel="noopener noreferrer" target="_blank">CRDO</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=ALAB" rel="noopener noreferrer" target="_blank">ALAB</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=COHR" rel="noopener noreferrer" target="_blank">COHR</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=CLS" rel="noopener noreferrer" target="_blank">CLS</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=CBRS" rel="noopener noreferrer" target="_blank">CBRS</a></div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-02">
+<div class="sector-head">
+<span class="num">02</span>
+<h2>AI Miners / HPC Pivot</h2>
+</div>
+<p>כורות ביטקוין שעוברות או מנסות לעבור למודל של AI / HPC / Data Centers.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=IREN" rel="noopener noreferrer" target="_blank">IREN</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=WULF" rel="noopener noreferrer" target="_blank">WULF</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=CORZ" rel="noopener noreferrer" target="_blank">CORZ</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=CIFR" rel="noopener noreferrer" target="_blank">CIFR</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=HUT" rel="noopener noreferrer" target="_blank">HUT</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=HIVE" rel="noopener noreferrer" target="_blank">HIVE</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=CLSK" rel="noopener noreferrer" target="_blank">CLSK</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=RIOT" rel="noopener noreferrer" target="_blank">RIOT</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=BITF" rel="noopener noreferrer" target="_blank">BITF</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=BTDR" rel="noopener noreferrer" target="_blank">BTDR</a>
+</div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-03">
+<div class="sector-head">
+<span class="num">03</span>
+<h2>Bitcoin Miners</h2>
+</div>
+<p>נעות עם ביטקוין, hash price, ETF flows, halving ומומנטום קריפטו.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=MARA" rel="noopener noreferrer" target="_blank">MARA</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=RIOT" rel="noopener noreferrer" target="_blank">RIOT</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=CLSK" rel="noopener noreferrer" target="_blank">CLSK</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=IREN" rel="noopener noreferrer" target="_blank">IREN</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=WULF" rel="noopener noreferrer" target="_blank">WULF</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=HUT" rel="noopener noreferrer" target="_blank">HUT</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=BITF" rel="noopener noreferrer" target="_blank">BITF</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=CIFR" rel="noopener noreferrer" target="_blank">CIFR</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=BTDR" rel="noopener noreferrer" target="_blank">BTDR</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=CORZ" rel="noopener noreferrer" target="_blank">CORZ</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=HIVE" rel="noopener noreferrer" target="_blank">HIVE</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=WGMI" rel="noopener noreferrer" target="_blank">WGMI</a>
+</div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-04">
+<div class="sector-head">
+<span class="num">04</span>
+<h2>Crypto Infrastructure</h2>
+</div>
+<p>נעות עם קריפטו, נפחי מסחר, ביטקוין, רגולציה ו־risk-on.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=COIN" rel="noopener noreferrer" target="_blank">COIN</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=HOOD" rel="noopener noreferrer" target="_blank">HOOD</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=MSTR" rel="noopener noreferrer" target="_blank">MSTR</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=GLXY" rel="noopener noreferrer" target="_blank">GLXY</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=BTCS" rel="noopener noreferrer" target="_blank">BTCS</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=BKKT" rel="noopener noreferrer" target="_blank">BKKT</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=CRCL" rel="noopener noreferrer" target="_blank">CRCL</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=BLSH" rel="noopener noreferrer" target="_blank">BLSH</a></div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-05">
+<div class="sector-head">
+<span class="num">05</span>
+<h2>Quantum Computing</h2>
+</div>
+<p>קבוצת מומנטום מובהקת. כשהנרטיב של קוונטום נדלק, הן נוטות לזוז יחד.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=IONQ" rel="noopener noreferrer" target="_blank">IONQ</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=RGTI" rel="noopener noreferrer" target="_blank">RGTI</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=QBTS" rel="noopener noreferrer" target="_blank">QBTS</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=QUBT" rel="noopener noreferrer" target="_blank">QUBT</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=ARQQ" rel="noopener noreferrer" target="_blank">ARQQ</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=IBM" rel="noopener noreferrer" target="_blank">IBM</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=INFQ" rel="noopener noreferrer" target="_blank">INFQ</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=NEO%3ABTQ" rel="noopener noreferrer" target="_blank">BTQ</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=QNT" rel="noopener noreferrer" target="_blank">QNT</a></div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-06">
+<div class="sector-head">
+<span class="num">06</span>
+<h2>Nuclear / SMR</h2>
+</div>
+<p>נעות סביב כורים מודולריים, אנרגיה גרעינית, רגולציה, חוזי חשמל ו־AI power demand.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=OKLO" rel="noopener noreferrer" target="_blank">OKLO</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=SMR" rel="noopener noreferrer" target="_blank">SMR</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=NNE" rel="noopener noreferrer" target="_blank">NNE</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=BWXT" rel="noopener noreferrer" target="_blank">BWXT</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=FLR" rel="noopener noreferrer" target="_blank">FLR</a>
+</div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-07">
+<div class="sector-head">
+<span class="num">07</span>
+<h2>Uranium / Nuclear Fuel</h2>
+</div>
+<p>נעות סביב אורניום, דלק גרעיני, supply chain, מחירי uranium ונרטיב אנרגיה גרעינית.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=CCJ" rel="noopener noreferrer" target="_blank">CCJ</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=LEU" rel="noopener noreferrer" target="_blank">LEU</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=UEC" rel="noopener noreferrer" target="_blank">UEC</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=UUUU" rel="noopener noreferrer" target="_blank">UUUU</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=NXE" rel="noopener noreferrer" target="_blank">NXE</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=DNN" rel="noopener noreferrer" target="_blank">DNN</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=URG" rel="noopener noreferrer" target="_blank">URG</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=EU" rel="noopener noreferrer" target="_blank">EU</a>
+</div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-08">
+<div class="sector-head">
+<span class="num">08</span>
+<h2>Power / Data Centers</h2>
+</div>
+<p>קבוצת חשמל ותשתיות שנעה עם הביקוש לחשמל מ־AI data centers.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=VST" rel="noopener noreferrer" target="_blank">VST</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=CEG" rel="noopener noreferrer" target="_blank">CEG</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=NRG" rel="noopener noreferrer" target="_blank">NRG</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=GEV" rel="noopener noreferrer" target="_blank">GEV</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=ETN" rel="noopener noreferrer" target="_blank">ETN</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=PWR" rel="noopener noreferrer" target="_blank">PWR</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=APH" rel="noopener noreferrer" target="_blank">APH</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=HUBB" rel="noopener noreferrer" target="_blank">HUBB</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=EME" rel="noopener noreferrer" target="_blank">EME</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=SEI" rel="noopener noreferrer" target="_blank">SEI</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=CAT" rel="noopener noreferrer" target="_blank">CAT</a></div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-09">
+<div class="sector-head">
+<span class="num">09</span>
+<h2>Semiconductors</h2>
+</div>
+<p>קבוצת שבבים רחבה, נעה עם AI, capex, תחזיות ענן ותוצאות NVDA / AVGO / TSM.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=NVDA" rel="noopener noreferrer" target="_blank">NVDA</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=AMD" rel="noopener noreferrer" target="_blank">AMD</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=AVGO" rel="noopener noreferrer" target="_blank">AVGO</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=MRVL" rel="noopener noreferrer" target="_blank">MRVL</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=ARM" rel="noopener noreferrer" target="_blank">ARM</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=TSM" rel="noopener noreferrer" target="_blank">TSM</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=ASML" rel="noopener noreferrer" target="_blank">ASML</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=INTC" rel="noopener noreferrer" target="_blank">INTC</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=QCOM" rel="noopener noreferrer" target="_blank">QCOM</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=AMAT" rel="noopener noreferrer" target="_blank">AMAT</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=LRCX" rel="noopener noreferrer" target="_blank">LRCX</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=KLAC" rel="noopener noreferrer" target="_blank">KLAC</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=ON" rel="noopener noreferrer" target="_blank">ON</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=MPWR" rel="noopener noreferrer" target="_blank">MPWR</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=SOXX" rel="noopener noreferrer" target="_blank">SOXX</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=CRDO" rel="noopener noreferrer" target="_blank">CRDO</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=ALAB" rel="noopener noreferrer" target="_blank">ALAB</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=COHR" rel="noopener noreferrer" target="_blank">COHR</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=TER" rel="noopener noreferrer" target="_blank">TER</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=CBRS" rel="noopener noreferrer" target="_blank">CBRS</a></div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-10">
+<div class="sector-head">
+<span class="num">10</span>
+<h2>DRAM / HBM / Memory</h2>
+</div>
+<p>תת־סקטור נפרד. זז לפי HBM, DRAM pricing ו־AI memory demand.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=MU" rel="noopener noreferrer" target="_blank">MU</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=WDC" rel="noopener noreferrer" target="_blank">WDC</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=STX" rel="noopener noreferrer" target="_blank">STX</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=SNDK" rel="noopener noreferrer" target="_blank">SNDK</a>
+</div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-11">
+<div class="sector-head">
+<span class="num">11</span>
+<h2>AI Software / Apps</h2>
+</div>
+<p>מניות AI תוכנה / אפליקציה. זזות סביב adoption, enterprise AI, agentic AI ונרטיב תוכנה.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=PLTR" rel="noopener noreferrer" target="_blank">PLTR</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=AI" rel="noopener noreferrer" target="_blank">AI</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=SOUN" rel="noopener noreferrer" target="_blank">SOUN</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=BBAI" rel="noopener noreferrer" target="_blank">BBAI</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=PATH" rel="noopener noreferrer" target="_blank">PATH</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=APP" rel="noopener noreferrer" target="_blank">APP</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=TEM" rel="noopener noreferrer" target="_blank">TEM</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=UPST" rel="noopener noreferrer" target="_blank">UPST</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=ZETA" rel="noopener noreferrer" target="_blank">ZETA</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=ACN" rel="noopener noreferrer" target="_blank">ACN</a></div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-12">
+<div class="sector-head">
+<span class="num">12</span>
+<h2>Small Cap AI Momentum</h2>
+</div>
+<p>קבוצה ספקולטיבית מאוד. זזה כשהשוק מחפש את מניות ה־AI הקטנות הבאות.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=SOUN" rel="noopener noreferrer" target="_blank">SOUN</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=BBAI" rel="noopener noreferrer" target="_blank">BBAI</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=AI" rel="noopener noreferrer" target="_blank">AI</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=SERV" rel="noopener noreferrer" target="_blank">SERV</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=LIDR" rel="noopener noreferrer" target="_blank">LIDR</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=POET" rel="noopener noreferrer" target="_blank">POET</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=RR" rel="noopener noreferrer" target="_blank">RR</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=KULR" rel="noopener noreferrer" target="_blank">KULR</a>
+</div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-13">
+<div class="sector-head">
+<span class="num">13</span>
+<h2>Cybersecurity</h2>
+</div>
+<p>זזות סביב תוצאות, תקציבי IT, AI security, מתקפות סייבר ו־risk-on בתוכנה.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=CRWD" rel="noopener noreferrer" target="_blank">CRWD</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=PANW" rel="noopener noreferrer" target="_blank">PANW</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=ZS" rel="noopener noreferrer" target="_blank">ZS</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=NET" rel="noopener noreferrer" target="_blank">NET</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=S" rel="noopener noreferrer" target="_blank">S</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=FTNT" rel="noopener noreferrer" target="_blank">FTNT</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=OKTA" rel="noopener noreferrer" target="_blank">OKTA</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=CYBR" rel="noopener noreferrer" target="_blank">CYBR</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=RBRK" rel="noopener noreferrer" target="_blank">RBRK</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=VRNS" rel="noopener noreferrer" target="_blank">VRNS</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=CIBR" rel="noopener noreferrer" target="_blank">CIBR</a>
+</div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-14">
+<div class="sector-head">
+<span class="num">14</span>
+<h2>Software / SaaS Growth</h2>
+</div>
+<p>תוכנה צמיחה. זזה עם ריבית, risk-on, תוצאות SaaS ו־AI software narrative.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=NOW" rel="noopener noreferrer" target="_blank">NOW</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=CRM" rel="noopener noreferrer" target="_blank">CRM</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=SNOW" rel="noopener noreferrer" target="_blank">SNOW</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=DDOG" rel="noopener noreferrer" target="_blank">DDOG</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=MDB" rel="noopener noreferrer" target="_blank">MDB</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=TEAM" rel="noopener noreferrer" target="_blank">TEAM</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=HUBS" rel="noopener noreferrer" target="_blank">HUBS</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=WDAY" rel="noopener noreferrer" target="_blank">WDAY</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=ZS" rel="noopener noreferrer" target="_blank">ZS</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=PLTR" rel="noopener noreferrer" target="_blank">PLTR</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=INTU" rel="noopener noreferrer" target="_blank">INTU</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=DUOL" rel="noopener noreferrer" target="_blank">DUOL</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=ADSK" rel="noopener noreferrer" target="_blank">ADSK</a>
+</div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-15">
+<div class="sector-head">
+<span class="num">15</span>
+<h2>Mega Cap Tech / AI Cloud</h2>
+</div>
+<p>ענקיות טק שנעות עם AI cloud, capex, ענן, פרסום ו־risk appetite.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=AAPL" rel="noopener noreferrer" target="_blank">AAPL</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=AMZN" rel="noopener noreferrer" target="_blank">AMZN</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=MSFT" rel="noopener noreferrer" target="_blank">MSFT</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=GOOGL" rel="noopener noreferrer" target="_blank">GOOGL</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=META" rel="noopener noreferrer" target="_blank">META</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=NFLX" rel="noopener noreferrer" target="_blank">NFLX</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=IBM" rel="noopener noreferrer" target="_blank">IBM</a>
+</div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-16">
+<div class="sector-head">
+<span class="num">16</span>
+<h2>Space</h2>
+</div>
+<p>מניות חלל. נעות סביב שיגורים, חוזים ממשלתיים, תוצאות וסנטימנט ספקולטיבי.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=RKLB" rel="noopener noreferrer" target="_blank">RKLB</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=ASTS" rel="noopener noreferrer" target="_blank">ASTS</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=LUNR" rel="noopener noreferrer" target="_blank">LUNR</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=RDW" rel="noopener noreferrer" target="_blank">RDW</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=BKSY" rel="noopener noreferrer" target="_blank">BKSY</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=IRDM" rel="noopener noreferrer" target="_blank">IRDM</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=PL" rel="noopener noreferrer" target="_blank">PL</a>
 
-  <!-- TOP BAR & QUICK SEARCH -->
-  <header class="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-all duration-300 no-print">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-      
-      <!-- Title & Branding -->
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-blue-500/20">
-            <i class="fa-solid fa-chart-line text-lg"></i>
-          </div>
-          <div>
-            <h1 class="text-base sm:text-lg font-black tracking-tight text-slate-900 dark:text-white leading-tight">מניות מומנטום</h1>
-            <p class="text-xs text-slate-500 dark:text-slate-400">רשימת עבודה למסחר יחסי לפי תתי־סקטורים</p>
-          </div>
-        </div>
-        
-        <!-- Toggle button on Mobile -->
-        <div class="flex items-center gap-2 md:hidden">
-          <button onclick="toggleDarkMode()" class="px-3 py-1.5 text-xs font-bold rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5" title="שינוי תצוגה">
-            <span class="theme-icon"><i class="fa-solid fa-moon"></i></span>
-            <span class="theme-text">מצב כהה</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Controls & Search -->
-      <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full md:w-auto">
-        <!-- Live Search Bar -->
-        <div class="relative flex-1 sm:w-64 md:w-80">
-          <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
-            <i class="fa-solid fa-magnifying-glass text-sm"></i>
-          </span>
-          <input type="text" id="searchInput" oninput="performSearch()" placeholder="חיפוש מניה (למשל NVDA) או סקטור..." 
-            class="w-full pr-9 pl-8 py-2 text-sm bg-slate-100 dark:bg-slate-800 border-0 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-blue-500 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all"/>
-          <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-            <i class="fa-solid fa-circle-xmark"></i>
-          </button>
-        </div>
-
-        <!-- Desktop Controls -->
-        <div class="hidden md:flex items-center gap-2">
-          <!-- Main Toggle Dark Mode Button -->
-          <button onclick="toggleDarkMode()" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95 transition-all flex items-center gap-2 shadow-sm border border-slate-200/50 dark:border-slate-700/50">
-            <span class="theme-icon"><i class="fa-solid fa-moon"></i></span>
-            <span class="theme-text">מצב כהה</span>
-          </button>
-          <button onclick="window.print()" class="px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-xs rounded-xl hover:opacity-90 active:scale-95 transition-all flex items-center gap-2 shadow-sm">
-            <i class="fa-solid fa-file-pdf"></i>
-            <span>שמירה ל־PDF</span>
-          </button>
-        </div>
-      </div>
-
-    </div>
-  </header>
-
-  <!-- MAIN CONTAINER -->
-  <main class="max-w-6xl mx-auto px-4 pt-6">
-
-    <!-- HERO NOTE & METRICS -->
-    <section class="bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border border-blue-500/20 rounded-2xl p-4 sm:p-5 mb-6 shadow-sm no-print">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 mb-2">
-            <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
-            עודכן: 23.06.2026
-          </span>
-          <h2 class="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-200 leading-snug">מפת המומנטום ותתי-הסקטורים של השוק</h2>
-          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
-            לחיצה על קבוצה מובילה למטה תנווט אותך ישר לסקטור שלה. לחיצה על סימול מניה תפתח ישירות את הגרף שלה בתוך <strong class="text-blue-600 dark:text-blue-400">TradingView</strong> בחלון חדש.
-          </p>
-        </div>
-        <!-- Mini Stats -->
-        <div class="grid grid-cols-2 gap-3 sm:flex items-center sm:gap-6 border-t sm:border-t-0 sm:border-r border-slate-200 dark:border-slate-800 pt-3 sm:pt-0 sm:pr-6">
-          <div>
-            <div class="text-xl sm:text-2xl font-black text-blue-600 dark:text-blue-400">35</div>
-            <div class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">תתי סקטורים</div>
-          </div>
-          <div>
-            <div class="text-xl sm:text-2xl font-black text-indigo-600 dark:text-indigo-400">270+</div>
-            <div class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">מניות מעקב</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- QUICK NAV GRID -->
-    <section class="custom-card border rounded-2xl p-4 sm:p-5 mb-8 no-print transition-all">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="font-black text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
-          <i class="fa-solid fa-list-ul"></i>
-          <span>ניווט מהיר לקבוצות מרכזיות למומנטום</span>
-        </h3>
-        <span class="text-[11px] text-slate-400 hidden sm:inline">לחיצה למעבר מהיר</span>
-      </div>
-      
-      <!-- Quick navigation pills -->
-      <div class="flex flex-wrap gap-2 max-h-48 overflow-y-auto pr-1 no-scrollbar md:max-h-none">
-        <a href="#sector-01" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">01. AI Infrastructure</a>
-        <a href="#sector-02" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">02. AI Miners</a>
-        <a href="#sector-03" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">03. Bitcoin Miners</a>
-        <a href="#sector-04" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">04. Crypto Infrastructure</a>
-        <a href="#sector-05" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">05. Quantum Computing</a>
-        <a href="#sector-06" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">06. Nuclear / SMR</a>
-        <a href="#sector-07" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">07. Uranium / Fuel</a>
-        <a href="#sector-08" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">08. Power / Data Centers</a>
-        <a href="#sector-09" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">09. Semiconductors</a>
-        <a href="#sector-10" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">10. DRAM / HBM / Memory</a>
-        <a href="#sector-11" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">11. AI Software</a>
-        <a href="#sector-12" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">12. Small Cap AI</a>
-        <a href="#sector-13" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">13. Cybersecurity</a>
-        <a href="#sector-14" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">14. SaaS Growth</a>
-        <a href="#sector-15" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">15. Mega Cap Tech</a>
-        <a href="#sector-16" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">16. Space</a>
-        <a href="#sector-17" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">17. eVTOL / Air Mobility</a>
-        <a href="#sector-18" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">18. Drones / Defense Tech</a>
-        <a href="#sector-19" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">19. Defense / Aero</a>
-        <a href="#sector-20" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">20. EV / Batteries</a>
-        <a href="#sector-21" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">21. Biotech Momentum</a>
-        <a href="#sector-22" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">22. GLP-1 / Pharma</a>
-        <a href="#sector-23" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">23. Healthcare Growth</a>
-        <a href="#sector-24" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">24. Meme / Volatility</a>
-        <a href="#sector-25" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">25. IPO / Recent</a>
-        <a href="#sector-26" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">26. China ADR</a>
-        <a href="#sector-27" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">27. Fintech / Brokers</a>
-        <a href="#sector-28" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">28. Gaming / AdTech</a>
-        <a href="#sector-29" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">29. Israel Tech</a>
-        <a href="#sector-30" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">30. Copper / Metals</a>
-        <a href="#sector-31" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">31. Solar / Renewables</a>
-        <a href="#sector-32" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">32. Energy / Oil & Gas</a>
-        <a href="#sector-33" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">33. Shipping / Transport</a>
-        <a href="#sector-34" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">34. Banks / Financials</a>
-        <a href="#sector-35" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all text-slate-700 dark:text-slate-300">35. Regional Banks</a>
-      </div>
-    </section>
-
-    <!-- SEARCH RESULT BANNER (HIDDEN BY DEFAULT) -->
-    <div id="searchFeedback" class="hidden items-center justify-between p-3 bg-blue-100 dark:bg-slate-800 border border-blue-200 dark:border-slate-700 rounded-xl mb-6 text-sm">
-      <div class="flex items-center gap-2">
-        <span class="w-2.5 h-2.5 bg-blue-500 rounded-full animate-ping"></span>
-        <span id="searchFeedbackText" class="font-bold text-slate-700 dark:text-slate-200">תוצאות סינון</span>
-      </div>
-      <button onclick="clearSearch()" class="text-xs font-bold text-blue-600 dark:text-blue-400 underline">בטל סינון</button>
-    </div>
-
-    <!-- SECTOR LISTS CARDS -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="sectorsContainer">
-
-      <!-- 01 AI Infrastructure -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-01">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">01</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">AI Infrastructure / Data Centers</h2>
-          </div>
-          <button onclick="copyTickers(this, 'NVDA,AVGO,VRT,ANET,DELL,SMCI,MRVL,ORCL,APLD,NBIS,CRWV,IBM,CRDO,ALAB,COHR,CLS,CBRS')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">נעות סביב AI capex, דאטה סנטרים, שרתים, קירור, רשתות וחשמל.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=NVDA" target="_blank" rel="noopener noreferrer">NVDA</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=AVGO" target="_blank" rel="noopener noreferrer">AVGO</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=VRT" target="_blank" rel="noopener noreferrer">VRT</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=ANET" target="_blank" rel="noopener noreferrer">ANET</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=DELL" target="_blank" rel="noopener noreferrer">DELL</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=SMCI" target="_blank" rel="noopener noreferrer">SMCI</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=MRVL" target="_blank" rel="noopener noreferrer">MRVL</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=ORCL" target="_blank" rel="noopener noreferrer">ORCL</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=APLD" target="_blank" rel="noopener noreferrer">APLD</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=NBIS" target="_blank" rel="noopener noreferrer">NBIS</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=CRWV" target="_blank" rel="noopener noreferrer">CRWV</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=IBM" target="_blank" rel="noopener noreferrer">IBM</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=CRDO" target="_blank" rel="noopener noreferrer">CRDO</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=ALAB" target="_blank" rel="noopener noreferrer">ALAB</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=COHR" target="_blank" rel="noopener noreferrer">COHR</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=CLS" target="_blank" rel="noopener noreferrer">CLS</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=CBRS" target="_blank" rel="noopener noreferrer">CBRS</a>
-        </div>
-      </section>
-
-      <!-- 02 AI Miners -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-02">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">02</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">AI Miners / HPC Pivot</h2>
-          </div>
-          <button onclick="copyTickers(this, 'IREN,WULF,CORZ,CIFR,HUT,HIVE,CLSK,RIOT,BITF,BTDR')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">כורות ביטקוין שעוברות או מנסות לעבור למודל של AI / HPC / Data Centers.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=IREN" target="_blank" rel="noopener noreferrer">IREN</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=WULF" target="_blank" rel="noopener noreferrer">WULF</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=CORZ" target="_blank" rel="noopener noreferrer">CORZ</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=CIFR" target="_blank" rel="noopener noreferrer">CIFR</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=HUT" target="_blank" rel="noopener noreferrer">HUT</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=HIVE" target="_blank" rel="noopener noreferrer">HIVE</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=CLSK" target="_blank" rel="noopener noreferrer">CLSK</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=RIOT" target="_blank" rel="noopener noreferrer">RIOT</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=BITF" target="_blank" rel="noopener noreferrer">BITF</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=BTDR" target="_blank" rel="noopener noreferrer">BTDR</a>
-        </div>
-      </section>
-
-      <!-- 03 Bitcoin Miners -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-03">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">03</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">Bitcoin Miners</h2>
-          </div>
-          <button onclick="copyTickers(this, 'MARA,RIOT,CLSK,IREN,WULF,HUT,BITF,CIFR,BTDR,CORZ,HIVE,WGMI')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">נעות עם ביטקוין, hash price, ETF flows, halving ומומנטום קריפטו.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=MARA" target="_blank" rel="noopener noreferrer">MARA</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=RIOT" target="_blank" rel="noopener noreferrer">RIOT</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=CLSK" target="_blank" rel="noopener noreferrer">CLSK</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=IREN" target="_blank" rel="noopener noreferrer">IREN</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=WULF" target="_blank" rel="noopener noreferrer">WULF</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=HUT" target="_blank" rel="noopener noreferrer">HUT</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=BITF" target="_blank" rel="noopener noreferrer">BITF</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=CIFR" target="_blank" rel="noopener noreferrer">CIFR</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=BTDR" target="_blank" rel="noopener noreferrer">BTDR</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=CORZ" target="_blank" rel="noopener noreferrer">CORZ</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=HIVE" target="_blank" rel="noopener noreferrer">HIVE</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=WGMI" target="_blank" rel="noopener noreferrer">WGMI</a>
-        </div>
-      </section>
-
-      <!-- 04 Crypto Infrastructure -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-04">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">04</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">Crypto Infrastructure</h2>
-          </div>
-          <button onclick="copyTickers(this, 'COIN,HOOD,MSTR,GLXY,BTCS,BKKT,CRCL,BLSH')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">נעות עם קריפטו, נפחי מסחר, ביטקוין, רגולציה ו־risk-on.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=COIN" target="_blank" rel="noopener noreferrer">COIN</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=HOOD" target="_blank" rel="noopener noreferrer">HOOD</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=MSTR" target="_blank" rel="noopener noreferrer">MSTR</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=GLXY" target="_blank" rel="noopener noreferrer">GLXY</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=BTCS" target="_blank" rel="noopener noreferrer">BTCS</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=BKKT" target="_blank" rel="noopener noreferrer">BKKT</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=CRCL" target="_blank" rel="noopener noreferrer">CRCL</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=BLSH" target="_blank" rel="noopener noreferrer">BLSH</a>
-        </div>
-      </section>
-
-      <!-- 05 Quantum Computing -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-05">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">05</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">Quantum Computing</h2>
-          </div>
-          <button onclick="copyTickers(this, 'IONQ,RGTI,QBTS,QUBT,ARQQ,IBM,INFQ,BTQ,QNT')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">קבוצת מומנטום מובהקת. כשהנרטיב של קוונטום נדלק, הן נוטות לזוז יחד.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=IONQ" target="_blank" rel="noopener noreferrer">IONQ</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=RGTI" target="_blank" rel="noopener noreferrer">RGTI</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=QBTS" target="_blank" rel="noopener noreferrer">QBTS</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=QUBT" target="_blank" rel="noopener noreferrer">QUBT</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=ARQQ" target="_blank" rel="noopener noreferrer">ARQQ</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=IBM" target="_blank" rel="noopener noreferrer">IBM</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=INFQ" target="_blank" rel="noopener noreferrer">INFQ</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=NEO%3ABTQ" target="_blank" rel="noopener noreferrer">BTQ</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=QNT" target="_blank" rel="noopener noreferrer">QNT</a>
-        </div>
-      </section>
-
-      <!-- 06 Nuclear / SMR -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-06">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">06</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">Nuclear / SMR</h2>
-          </div>
-          <button onclick="copyTickers(this, 'OKLO,SMR,NNE,BWXT,FLR')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">נעות סביב כורים מודולריים, אנרגיה גרעינית, רגולציה, חוזי חשמל ו־AI power demand.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=OKLO" target="_blank" rel="noopener noreferrer">OKLO</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=SMR" target="_blank" rel="noopener noreferrer">SMR</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=NNE" target="_blank" rel="noopener noreferrer">NNE</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=BWXT" target="_blank" rel="noopener noreferrer">BWXT</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=FLR" target="_blank" rel="noopener noreferrer">FLR</a>
-        </div>
-      </section>
-
-      <!-- 07 Uranium / Nuclear Fuel -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-07">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">07</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">Uranium / Nuclear Fuel</h2>
-          </div>
-          <button onclick="copyTickers(this, 'CCJ,LEU,UEC,UUUU,NXE,DNN,URG,EU')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">נעות סביב אורניום, דלק גרעיני, supply chain, מחירי uranium ונרטיב אנרגיה גרעינית.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=CCJ" target="_blank" rel="noopener noreferrer">CCJ</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=LEU" target="_blank" rel="noopener noreferrer">LEU</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=UEC" target="_blank" rel="noopener noreferrer">UEC</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=UUUU" target="_blank" rel="noopener noreferrer">UUUU</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=NXE" target="_blank" rel="noopener noreferrer">NXE</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=DNN" target="_blank" rel="noopener noreferrer">DNN</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=URG" target="_blank" rel="noopener noreferrer">URG</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=EU" target="_blank" rel="noopener noreferrer">EU</a>
-        </div>
-      </section>
-
-      <!-- 08 Power / Data Centers -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-08">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">08</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">Power / Data Centers</h2>
-          </div>
-          <button onclick="copyTickers(this, 'VST,CEG,NRG,GEV,ETN,PWR,APH,HUBB,EME,SEI,CAT')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">קבוצת חשמל ותשתיות שנעה עם הביקוש לחשמל מ־AI data centers.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=VST" target="_blank" rel="noopener noreferrer">VST</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=CEG" target="_blank" rel="noopener noreferrer">CEG</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=NRG" target="_blank" rel="noopener noreferrer">NRG</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=GEV" target="_blank" rel="noopener noreferrer">GEV</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=ETN" target="_blank" rel="noopener noreferrer">ETN</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=PWR" target="_blank" rel="noopener noreferrer">PWR</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=APH" target="_blank" rel="noopener noreferrer">APH</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=HUBB" target="_blank" rel="noopener noreferrer">HUBB</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=EME" target="_blank" rel="noopener noreferrer">EME</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=SEI" target="_blank" rel="noopener noreferrer">SEI</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=CAT" target="_blank" rel="noopener noreferrer">CAT</a>
-        </div>
-      </section>
-
-      <!-- 09 Semiconductors -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-09">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">09</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">Semiconductors</h2>
-          </div>
-          <button onclick="copyTickers(this, 'NVDA,AMD,AVGO,MRVL,ARM,TSM,ASML,INTC,QCOM,AMAT,LRCX,KLAC,ON,MPWR,SOXX,CRDO,ALAB,COHR,TER,CBRS')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">קבוצת שבבים רחבה, נעה עם AI, capex, תחזיות ענן ותוצאות NVDA / AVGO / TSM.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=NVDA" target="_blank" rel="noopener noreferrer">NVDA</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=AMD" target="_blank" rel="noopener noreferrer">AMD</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=AVGO" target="_blank" rel="noopener noreferrer">AVGO</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=MRVL" target="_blank" rel="noopener noreferrer">MRVL</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=ARM" target="_blank" rel="noopener noreferrer">ARM</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=TSM" target="_blank" rel="noopener noreferrer">TSM</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=ASML" target="_blank" rel="noopener noreferrer">ASML</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=INTC" target="_blank" rel="noopener noreferrer">INTC</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=QCOM" target="_blank" rel="noopener noreferrer">QCOM</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=AMAT" target="_blank" rel="noopener noreferrer">AMAT</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=LRCX" target="_blank" rel="noopener noreferrer">LRCX</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=KLAC" target="_blank" rel="noopener noreferrer">KLAC</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=ON" target="_blank" rel="noopener noreferrer">ON</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=MPWR" target="_blank" rel="noopener noreferrer">MPWR</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=SOXX" target="_blank" rel="noopener noreferrer">SOXX</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=CRDO" target="_blank" rel="noopener noreferrer">CRDO</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=ALAB" target="_blank" rel="noopener noreferrer">ALAB</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=COHR" target="_blank" rel="noopener noreferrer">COHR</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=TER" target="_blank" rel="noopener noreferrer">TER</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=CBRS" target="_blank" rel="noopener noreferrer">CBRS</a>
-        </div>
-      </section>
-
-      <!-- 10 DRAM / HBM / Memory -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-10">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">10</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">DRAM / HBM / Memory</h2>
-          </div>
-          <button onclick="copyTickers(this, 'MU,WDC,STX,SNDK')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">תת־סקטור נפרד. זז לפי HBM, DRAM pricing ו־AI memory demand.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=MU" target="_blank" rel="noopener noreferrer">MU</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=WDC" target="_blank" rel="noopener noreferrer">WDC</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=STX" target="_blank" rel="noopener noreferrer">STX</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=SNDK" target="_blank" rel="noopener noreferrer">SNDK</a>
-        </div>
-      </section>
-
-      <!-- 11 AI Software / Apps -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-11">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">11</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">AI Software / Apps</h2>
-          </div>
-          <button onclick="copyTickers(this, 'PLTR,AI,SOUN,BBAI,PATH,APP,TEM,UPST,ZETA,ACN')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">מניות AI תוכנה / אפליקציה. זזות סביב adoption, enterprise AI, agentic AI ונרטיב תוכנה.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=PLTR" target="_blank" rel="noopener noreferrer">PLTR</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=AI" target="_blank" rel="noopener noreferrer">AI</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=SOUN" target="_blank" rel="noopener noreferrer">SOUN</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=BBAI" target="_blank" rel="noopener noreferrer">BBAI</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=PATH" target="_blank" rel="noopener noreferrer">PATH</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=APP" target="_blank" rel="noopener noreferrer">APP</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=TEM" target="_blank" rel="noopener noreferrer">TEM</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=UPST" target="_blank" rel="noopener noreferrer">UPST</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=ZETA" target="_blank" rel="noopener noreferrer">ZETA</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=ACN" target="_blank" rel="noopener noreferrer">ACN</a>
-        </div>
-      </section>
-
-      <!-- 12 Small Cap AI Momentum -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-12">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">12</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">Small Cap AI Momentum</h2>
-          </div>
-          <button onclick="copyTickers(this, 'SOUN,BBAI,AI,SERV,LIDR,POET,RR,KULR')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">קבוצה ספקולטיבית מאוד. זזה כשהשוק מחפש את מניות ה־AI הקטנות הבאות.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=SOUN" target="_blank" rel="noopener noreferrer">SOUN</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=BBAI" target="_blank" rel="noopener noreferrer">BBAI</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=AI" target="_blank" rel="noopener noreferrer">AI</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=SERV" target="_blank" rel="noopener noreferrer">SERV</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=LIDR" target="_blank" rel="noopener noreferrer">LIDR</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=POET" target="_blank" rel="noopener noreferrer">POET</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=RR" target="_blank" rel="noopener noreferrer">RR</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=KULR" target="_blank" rel="noopener noreferrer">KULR</a>
-        </div>
-      </section>
-
-      <!-- 13 Cybersecurity -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-13">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">13</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">Cybersecurity</h2>
-          </div>
-          <button onclick="copyTickers(this, 'CRWD,PANW,ZS,NET,S,FTNT,OKTA,CYBR,RBRK,VRNS,CIBR')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">זזות סביב תוצאות, תקציבי IT, AI security, מתקפות סייבר ו־risk-on בתוכנה.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=CRWD" target="_blank" rel="noopener noreferrer">CRWD</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=PANW" target="_blank" rel="noopener noreferrer">PANW</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=ZS" target="_blank" rel="noopener noreferrer">ZS</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=NET" target="_blank" rel="noopener noreferrer">NET</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=S" target="_blank" rel="noopener noreferrer">S</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=FTNT" target="_blank" rel="noopener noreferrer">FTNT</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=OKTA" target="_blank" rel="noopener noreferrer">OKTA</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=CYBR" target="_blank" rel="noopener noreferrer">CYBR</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=RBRK" target="_blank" rel="noopener noreferrer">RBRK</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=VRNS" target="_blank" rel="noopener noreferrer">VRNS</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=CIBR" target="_blank" rel="noopener noreferrer">CIBR</a>
-        </div>
-      </section>
-
-      <!-- 14 Software / SaaS Growth -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-14">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">14</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">Software / SaaS Growth</h2>
-          </div>
-          <button onclick="copyTickers(this, 'NOW,CRM,SNOW,DDOG,MDB,TEAM,HUBS,WDAY,ZS,PLTR,INTU,DUOL,ADSK')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">תוכנה צמיחה. זזה עם ריבית, risk-on, תוצאות SaaS ו־AI software narrative.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=NOW" target="_blank" rel="noopener noreferrer">NOW</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=CRM" target="_blank" rel="noopener noreferrer">CRM</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=SNOW" target="_blank" rel="noopener noreferrer">SNOW</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=DDOG" target="_blank" rel="noopener noreferrer">DDOG</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=MDB" target="_blank" rel="noopener noreferrer">MDB</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=TEAM" target="_blank" rel="noopener noreferrer">TEAM</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=HUBS" target="_blank" rel="noopener noreferrer">HUBS</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=WDAY" target="_blank" rel="noopener noreferrer">WDAY</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=ZS" target="_blank" rel="noopener noreferrer">ZS</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=PLTR" target="_blank" rel="noopener noreferrer">PLTR</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=INTU" target="_blank" rel="noopener noreferrer">INTU</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=DUOL" target="_blank" rel="noopener noreferrer">DUOL</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=ADSK" target="_blank" rel="noopener noreferrer">ADSK</a>
-        </div>
-      </section>
-
-      <!-- 15 Mega Cap Tech / AI Cloud -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-15">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">15</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">Mega Cap Tech / AI Cloud</h2>
-          </div>
-          <button onclick="copyTickers(this, 'AAPL,AMZN,MSFT,GOOGL,META,NFLX,IBM')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">ענקיות טק שנעות עם AI cloud, capex, ענן, פרסום ו־risk appetite.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=AAPL" target="_blank" rel="noopener noreferrer">AAPL</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=AMZN" target="_blank" rel="noopener noreferrer">AMZN</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=MSFT" target="_blank" rel="noopener noreferrer">MSFT</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=GOOGL" target="_blank" rel="noopener noreferrer">GOOGL</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=META" target="_blank" rel="noopener noreferrer">META</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=NFLX" target="_blank" rel="noopener noreferrer">NFLX</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=IBM" target="_blank" rel="noopener noreferrer">IBM</a>
-        </div>
-      </section>
-
-      <!-- 16 Space -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-16">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">16</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">Space</h2>
-          </div>
-          <button onclick="copyTickers(this, 'RKLB,ASTS,LUNR,RDW,BKSY,IRDM,PL,SPCX')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">מניות חלל. נעות סביב שיגורים, חוזים ממשלתיים, תוצאות וסנטימנט ספקולטיבי.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=RKLB" target="_blank" rel="noopener noreferrer">RKLB</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=ASTS" target="_blank" rel="noopener noreferrer">ASTS</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=LUNR" target="_blank" rel="noopener noreferrer">LUNR</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=RDW" target="_blank" rel="noopener noreferrer">RDW</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=BKSY" target="_blank" rel="noopener noreferrer">BKSY</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=IRDM" target="_blank" rel="noopener noreferrer">IRDM</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=PL" target="_blank" rel="noopener noreferrer">PL</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=SPCX" target="_blank" rel="noopener noreferrer">SPCX</a>
-        </div>
-      </section>
-
-      <!-- 17 eVTOL / Air Mobility -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-17">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">17</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">eVTOL / Air Mobility</h2>
-          </div>
-          <button onclick="copyTickers(this, 'JOBY,ACHR,EVTL,BLDE')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">קבוצת מוניות מעופפות / תעופה חשמלית. בפועל עיקר הטרייד הוא JOBY ו־ACHR.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=JOBY" target="_blank" rel="noopener noreferrer">JOBY</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=ACHR" target="_blank" rel="noopener noreferrer">ACHR</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=EVTL" target="_blank" rel="noopener noreferrer">EVTL</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=BLDE" target="_blank" rel="noopener noreferrer">BLDE</a>
-        </div>
-      </section>
-
-      <!-- 18 Drones / Defense Tech -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-18">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">18</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">Drones / Defense Tech</h2>
-          </div>
-          <button onclick="copyTickers(this, 'RCAT,UMAC,PDYN,AVAV,KTOS,ONDS,AIRO,SWMR,AVEX')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">רחפנים, מערכות אוטונומיות וביטחון טכנולוגי.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=RCAT" target="_blank" rel="noopener noreferrer">RCAT</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=UMAC" target="_blank" rel="noopener noreferrer">UMAC</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=PDYN" target="_blank" rel="noopener noreferrer">PDYN</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=AVAV" target="_blank" rel="noopener noreferrer">AVAV</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=KTOS" target="_blank" rel="noopener noreferrer">KTOS</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=ONDS" target="_blank" rel="noopener noreferrer">ONDS</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=AIRO" target="_blank" rel="noopener noreferrer">AIRO</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=SWMR" target="_blank" rel="noopener noreferrer">SWMR</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=AVEX" target="_blank" rel="noopener noreferrer">AVEX</a>
-        </div>
-      </section>
-
-      <!-- 19 Defense / Aerospace -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-19">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">19</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">Defense / Aerospace</h2>
-          </div>
-          <button onclick="copyTickers(this, 'LMT,RTX,NOC,GD,HWM,KTOS,AVAV,BA')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">ביטחוניות גדולות ותעופה. KTOS ו־AVAV יותר מומנטום, הגדולות יותר עוגן.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=LMT" target="_blank" rel="noopener noreferrer">LMT</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=RTX" target="_blank" rel="noopener noreferrer">RTX</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=NOC" target="_blank" rel="noopener noreferrer">NOC</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=GD" target="_blank" rel="noopener noreferrer">GD</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=HWM" target="_blank" rel="noopener noreferrer">HWM</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=KTOS" target="_blank" rel="noopener noreferrer">KTOS</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=AVAV" target="_blank" rel="noopener noreferrer">AVAV</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=BA" target="_blank" rel="noopener noreferrer">BA</a>
-        </div>
-      </section>
-
-      <!-- 20 EV / Batteries / Autonomy -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-20">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">20</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">EV / Batteries / Autonomy</h2>
-          </div>
-          <button onclick="copyTickers(this, 'TSLA,RIVN,LCID,QS,ENVX,CHPT,OUST,LAZR,AMPX,MBLY')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">רכב חשמלי, סוללות, אוטונומיה וליידאר.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=TSLA" target="_blank" rel="noopener noreferrer">TSLA</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=RIVN" target="_blank" rel="noopener noreferrer">RIVN</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=LCID" target="_blank" rel="noopener noreferrer">LCID</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=QS" target="_blank" rel="noopener noreferrer">QS</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=ENVX" target="_blank" rel="noopener noreferrer">ENVX</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=CHPT" target="_blank" rel="noopener noreferrer">CHPT</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=OUST" target="_blank" rel="noopener noreferrer">OUST</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=LAZR" target="_blank" rel="noopener noreferrer">LAZR</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=AMPX" target="_blank" rel="noopener noreferrer">AMPX</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=MBLY" target="_blank" rel="noopener noreferrer">MBLY</a>
-        </div>
-      </section>
-
-      <!-- 21 Biotech Momentum -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-21">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">21</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">Biotech Momentum</h2>
-          </div>
-          <button onclick="copyTickers(this, 'XBI,MRNA,BNTX,SRPT,BEAM,CRSP,RXRX,ALMS')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">ביוטק תנודתי, זז לפי FDA, ניסויים, M&amp;A ונרטיב סיכון.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=XBI" target="_blank" rel="noopener noreferrer">XBI</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=MRNA" target="_blank" rel="noopener noreferrer">MRNA</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=BNTX" target="_blank" rel="noopener noreferrer">BNTX</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=SRPT" target="_blank" rel="noopener noreferrer">SRPT</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=BEAM" target="_blank" rel="noopener noreferrer">BEAM</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=CRSP" target="_blank" rel="noopener noreferrer">CRSP</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=RXRX" target="_blank" rel="noopener noreferrer">RXRX</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=ALMS" target="_blank" rel="noopener noreferrer">ALMS</a>
-        </div>
-      </section>
-
-      <!-- 22 GLP-1 / Pharma Growth -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-22">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">22</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">GLP-1 / Pharma Growth</h2>
-          </div>
-          <button onclick="copyTickers(this, 'LLY,NVO,VKTX,AMGN,ALT')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">קבוצת השמנה / GLP-1 / פארמה צמיחה.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=LLY" target="_blank" rel="noopener noreferrer">LLY</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=NVO" target="_blank" rel="noopener noreferrer">NVO</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=VKTX" target="_blank" rel="noopener noreferrer">VKTX</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=AMGN" target="_blank" rel="noopener noreferrer">AMGN</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=ALT" target="_blank" rel="noopener noreferrer">ALT</a>
-        </div>
-      </section>
-
-      <!-- 23 Healthcare / Pharma Growth -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-23">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">23</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">Healthcare / Pharma Growth</h2>
-          </div>
-          <button onclick="copyTickers(this, 'XLV,LLY,NVO,AMGN,ISRG,TMO,UNH')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">פחות קבוצת טיסה, יותר קבוצת השוואה סקטוריאלית לבריאות גדולה וצמיחה רפואית.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=XLV" target="_blank" rel="noopener noreferrer">XLV</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=LLY" target="_blank" rel="noopener noreferrer">LLY</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=NVO" target="_blank" rel="noopener noreferrer">NVO</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=AMGN" target="_blank" rel="noopener noreferrer">AMGN</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=ISRG" target="_blank" rel="noopener noreferrer">ISRG</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=TMO" target="_blank" rel="noopener noreferrer">TMO</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=UNH" target="_blank" rel="noopener noreferrer">UNH</a>
-        </div>
-      </section>
-
-      <!-- 24 Meme / High Volatility -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-24">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">24</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">Meme / High Volatility</h2>
-          </div>
-          <button onclick="copyTickers(this, 'GME,AMC,DJT,CVNA,RDDT,UPST,HOOD,SMCI,MSTR')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">מניות תנודתיות מאוד, נעות לפי סנטימנט, short interest, retail flow ו־options.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=GME" target="_blank" rel="noopener noreferrer">GME</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=AMC" target="_blank" rel="noopener noreferrer">AMC</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=DJT" target="_blank" rel="noopener noreferrer">DJT</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=CVNA" target="_blank" rel="noopener noreferrer">CVNA</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=RDDT" target="_blank" rel="noopener noreferrer">RDDT</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=UPST" target="_blank" rel="noopener noreferrer">UPST</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=HOOD" target="_blank" rel="noopener noreferrer">HOOD</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=SMCI" target="_blank" rel="noopener noreferrer">SMCI</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=MSTR" target="_blank" rel="noopener noreferrer">MSTR</a>
-        </div>
-      </section>
-
-      <!-- 25 IPO / Recent Momentum -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-25">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">25</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">IPO / Recent Momentum</h2>
-          </div>
-          <button onclick="copyTickers(this, 'SPCX,RDDT,ARM,CAVA,RBRK,ALAB,TEM,CRWV,HSAI,CRCL,BLSH,FIGR,AIRO,SWMR,AVEX,QNT,INFQ,CBRS')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">מניות הנפקה / חדשות יחסית / מומנטום סביב סיפור חדש.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=SPCX" target="_blank" rel="noopener noreferrer">SPCX</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=RDDT" target="_blank" rel="noopener noreferrer">RDDT</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=ARM" target="_blank" rel="noopener noreferrer">ARM</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=CAVA" target="_blank" rel="noopener noreferrer">CAVA</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=RBRK" target="_blank" rel="noopener noreferrer">RBRK</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=ALAB" target="_blank" rel="noopener noreferrer">ALAB</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=TEM" target="_blank" rel="noopener noreferrer">TEM</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=CRWV" target="_blank" rel="noopener noreferrer">CRWV</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=HSAI" target="_blank" rel="noopener noreferrer">HSAI</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=CRCL" target="_blank" rel="noopener noreferrer">CRCL</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=BLSH" target="_blank" rel="noopener noreferrer">BLSH</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=FIGR" target="_blank" rel="noopener noreferrer">FIGR</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=AIRO" target="_blank" rel="noopener noreferrer">AIRO</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=SWMR" target="_blank" rel="noopener noreferrer">SWMR</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=AVEX" target="_blank" rel="noopener noreferrer">AVEX</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=QNT" target="_blank" rel="noopener noreferrer">QNT</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=INFQ" target="_blank" rel="noopener noreferrer">INFQ</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=CBRS" target="_blank" rel="noopener noreferrer">CBRS</a>
-        </div>
-      </section>
-
-      <!-- 26 China ADR Momentum -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-26">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">26</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">China ADR Momentum</h2>
-          </div>
-          <button onclick="copyTickers(this, 'BABA,JD,PDD,BIDU,NIO,XPEV,LI')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">מניות סין בארה״ב, נעות יחד לפי רגולציה סינית, stimulus, יחסי ארה״ב־סין וסנטימנט ADR.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=BABA" target="_blank" rel="noopener noreferrer">BABA</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=JD" target="_blank" rel="noopener noreferrer">JD</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=PDD" target="_blank" rel="noopener noreferrer">PDD</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=BIDU" target="_blank" rel="noopener noreferrer">BIDU</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=NIO" target="_blank" rel="noopener noreferrer">NIO</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=XPEV" target="_blank" rel="noopener noreferrer">XPEV</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=LI" target="_blank" rel="noopener noreferrer">LI</a>
-        </div>
-      </section>
-
-      <!-- 27 Fintech / Brokers / Payments -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-27">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">27</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">Fintech / Brokers / Payments</h2>
-          </div>
-          <button onclick="copyTickers(this, 'HOOD,SOFI,SQ,PYPL,AFRM,UPST,COIN,FIGR')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">פינטק, ברוקרים, תשלומים ואשראי צרכני.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=HOOD" target="_blank" rel="noopener noreferrer">HOOD</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=SOFI" target="_blank" rel="noopener noreferrer">SOFI</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=SQ" target="_blank" rel="noopener noreferrer">SQ</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=PYPL" target="_blank" rel="noopener noreferrer">PYPL</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=AFRM" target="_blank" rel="noopener noreferrer">AFRM</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=UPST" target="_blank" rel="noopener noreferrer">UPST</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=COIN" target="_blank" rel="noopener noreferrer">COIN</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=FIGR" target="_blank" rel="noopener noreferrer">FIGR</a>
-        </div>
-      </section>
-
-      <!-- 28 Gaming / AdTech -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-28">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">28</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">Gaming / AdTech</h2>
-          </div>
-          <button onclick="copyTickers(this, 'PLTK,APP,RBLX,U,TTWO,ZETA')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">גיימינג, פרסום, אפליקציות וצמיחת משתמשים.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=PLTK" target="_blank" rel="noopener noreferrer">PLTK</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=APP" target="_blank" rel="noopener noreferrer">APP</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=RBLX" target="_blank" rel="noopener noreferrer">RBLX</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=U" target="_blank" rel="noopener noreferrer">U</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=TTWO" target="_blank" rel="noopener noreferrer">TTWO</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=ZETA" target="_blank" rel="noopener noreferrer">ZETA</a>
-        </div>
-      </section>
-
-      <!-- 29 Israel Tech / Software -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-29">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">29</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">Israel Tech / Software</h2>
-          </div>
-          <button onclick="copyTickers(this, 'NICE,PLTK,MBLY,VRNS')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">מניות ישראליות / ישראל־קשורות. קבוצה פחות טהורה, אבל שימושית להשוואה.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=NICE" target="_blank" rel="noopener noreferrer">NICE</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=PLTK" target="_blank" rel="noopener noreferrer">PLTK</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=MBLY" target="_blank" rel="noopener noreferrer">MBLY</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=VRNS" target="_blank" rel="noopener noreferrer">VRNS</a>
-        </div>
-      </section>
-
-      <!-- 30 Copper / Metals -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-30">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">30</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">Copper / Metals</h2>
-          </div>
-          <button onclick="copyTickers(this, 'FCX,ICOP,SCCO,TECK,BHP,RIO')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">נעות סביב נחושת, תשתיות, חשמל, AI grid, סין ותעשייה.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=FCX" target="_blank" rel="noopener noreferrer">FCX</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=ICOP" target="_blank" rel="noopener noreferrer">ICOP</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=SCCO" target="_blank" rel="noopener noreferrer">SCCO</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=TECK" target="_blank" rel="noopener noreferrer">TECK</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=BHP" target="_blank" rel="noopener noreferrer">BHP</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=RIO" target="_blank" rel="noopener noreferrer">RIO</a>
-        </div>
-      </section>
-
-      <!-- 31 Solar / Renewables -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-31">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">31</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">Solar / Renewables</h2>
-          </div>
-          <button onclick="copyTickers(this, 'FSLR,ENPH,SEDG,RUN,NOVA,ARRY,TAN')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">סולאר, ריבית, רגולציה וביקוש אנרגיה.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=FSLR" target="_blank" rel="noopener noreferrer">FSLR</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=ENPH" target="_blank" rel="noopener noreferrer">ENPH</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=SEDG" target="_blank" rel="noopener noreferrer">SEDG</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=RUN" target="_blank" rel="noopener noreferrer">RUN</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=NOVA" target="_blank" rel="noopener noreferrer">NOVA</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=ARRY" target="_blank" rel="noopener noreferrer">ARRY</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=TAN" target="_blank" rel="noopener noreferrer">TAN</a>
-        </div>
-      </section>
-
-      <!-- 32 Energy / Oil & Gas -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-32">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">32</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">Energy / Oil &amp; Gas</h2>
-          </div>
-          <button onclick="copyTickers(this, 'XOM,CVX,OXY,SLB,HAL,COP,EOG,VLO,SSL')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">נפט, גז, זיקוק ושירותי אנרגיה.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=XOM" target="_blank" rel="noopener noreferrer">XOM</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=CVX" target="_blank" rel="noopener noreferrer">CVX</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=OXY" target="_blank" rel="noopener noreferrer">OXY</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=SLB" target="_blank" rel="noopener noreferrer">SLB</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=HAL" target="_blank" rel="noopener noreferrer">HAL</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=COP" target="_blank" rel="noopener noreferrer">COP</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=EOG" target="_blank" rel="noopener noreferrer">EOG</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=VLO" target="_blank" rel="noopener noreferrer">VLO</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=SSL" target="_blank" rel="noopener noreferrer">SSL</a>
-        </div>
-      </section>
-
-      <!-- 33 Shipping / Transport -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-33">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">33</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">Shipping / Transport</h2>
-          </div>
-          <button onclick="copyTickers(this, 'ZIM,MATX,SBLK,GNK,DAC')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">ספנות ותובלה, נעות לפי תעריפי הובלה, סחר גלובלי וגיאופוליטיקה.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=ZIM" target="_blank" rel="noopener noreferrer">ZIM</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=MATX" target="_blank" rel="noopener noreferrer">MATX</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=SBLK" target="_blank" rel="noopener noreferrer">SBLK</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=GNK" target="_blank" rel="noopener noreferrer">GNK</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=DAC" target="_blank" rel="noopener noreferrer">DAC</a>
-        </div>
-      </section>
-
-      <!-- 34 Banks / Financials -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-34">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">34</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">Banks / Financials</h2>
-          </div>
-          <button onclick="copyTickers(this, 'JPM,BAC,GS,MS,C,WFC,SCHW')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">בנקים גדולים ופיננסים.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=JPM" target="_blank" rel="noopener noreferrer">JPM</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=BAC" target="_blank" rel="noopener noreferrer">BAC</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=GS" target="_blank" rel="noopener noreferrer">GS</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=MS" target="_blank" rel="noopener noreferrer">MS</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=C" target="_blank" rel="noopener noreferrer">C</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=WFC" target="_blank" rel="noopener noreferrer">WFC</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=SCHW" target="_blank" rel="noopener noreferrer">SCHW</a>
-        </div>
-      </section>
-
-      <!-- 35 Regional Banks -->
-      <section class="sector-card custom-card border rounded-2xl p-5 shadow-sm transition-all hover:shadow-md" id="sector-35">
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex items-center gap-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-extrabold font-mono">35</span>
-            <h2 class="text-base sm:text-lg font-black tracking-tight sector-title">Regional Banks</h2>
-          </div>
-          <button onclick="copyTickers(this, 'KRE,FLG,WAL,BANC,ZION,CMA,KEY,TFC')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="העתק רשימת מניות">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 h-10 overflow-hidden text-ellipsis line-clamp-2">בנקים אזוריים, רגישים לריבית, אשראי, פיקדונות ונדל״ן מסחרי.</p>
-        <div class="tickers flex flex-wrap gap-2">
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=KRE" target="_blank" rel="noopener noreferrer">KRE</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=FLG" target="_blank" rel="noopener noreferrer">FLG</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=WAL" target="_blank" rel="noopener noreferrer">WAL</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=BANC" target="_blank" rel="noopener noreferrer">BANC</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=ZION" target="_blank" rel="noopener noreferrer">ZION</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=CMA" target="_blank" rel="noopener noreferrer">CMA</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=KEY" target="_blank" rel="noopener noreferrer">KEY</a>
-          <a class="ticker" href="https://www.tradingview.com/chart/?symbol=TFC" target="_blank" rel="noopener noreferrer">TFC</a>
-        </div>
-      </section>
-
-    </div>
-
-    <!-- EMPTY SEARCH STATE -->
-    <div id="emptySearchState" class="hidden flex-col items-center justify-center text-center py-12 no-print">
-      <div class="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-400 mb-4">
-        <i class="fa-solid fa-magnifying-glass text-2xl"></i>
-      </div>
-      <h3 class="text-lg font-bold text-slate-700 dark:text-slate-300">לא נמצאו תוצאות</h3>
-      <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">נסה לחפש סימול מניה מדויק אחר או ביטוי קצר יותר.</p>
-      <button onclick="clearSearch()" class="mt-4 px-4 py-2 bg-blue-600 text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-all">בטל חיפוש</button>
-    </div>
-
-  </main>
-
-  <!-- CUSTOM SUCCESS TOAST -->
-  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-10 opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-3 px-4 py-3 bg-slate-900 text-white dark:bg-white dark:text-slate-900 rounded-xl shadow-xl border border-slate-800 dark:border-slate-200">
-    <i class="fa-solid fa-circle-check text-green-500"></i>
-    <span class="text-sm font-bold" id="toastMessage">הועתק ללוח!</span>
-  </div>
-
-  <!-- FIXED FLOATING BUTTON FOR MOBILE NAV / BACK TO TOP -->
-  <div class="fixed bottom-6 left-6 z-40 flex flex-col gap-2 no-print">
-    <a href="#" class="w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-lg shadow-blue-500/30 hover:scale-110 active:scale-95 transition-all" title="חזרה לראש העמוד">
-      <i class="fa-solid fa-arrow-up"></i>
-    </a>
-  </div>
-
-  <!-- FOOTER -->
-  <footer class="max-w-6xl mx-auto px-4 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400 transition-all">
-    <div class="flex items-center justify-center gap-1 mb-2 font-bold text-slate-700 dark:text-slate-300 text-sm">
-      <span>נבנה על ידי דורון שרייבמן</span>
-    </div>
-    <div class="max-w-2xl mx-auto leading-relaxed dark:text-slate-500 text-[11px]">
-      גילוי נאות: הרשימה מיועדת לצורכי מידע, מעקב והשוואה יחסית בלבד, אינה מהווה ייעוץ השקעות, שיווק השקעות או המלצה לביצוע פעולה כלשהי בניירות ערך.
-    </div>
-  </footer>
-
-  <!-- SCRIPT FOR FUNCTIONALITIES -->
-  <script>
-    // Theme logic - Dark / Light Mode Toggling
-    function initTheme() {
-      const savedTheme = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      
-      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-        setDarkTheme(true);
-      } else {
-        setDarkTheme(false);
-      }
-    }
-    
-    function setDarkTheme(isDark) {
-      const htmlEl = document.documentElement;
-      const themeIcons = document.querySelectorAll('.theme-icon');
-      const themeTexts = document.querySelectorAll('.theme-text');
-      
-      if (isDark) {
-        htmlEl.classList.add('dark');
-        // Update all theme button states
-        themeIcons.forEach(icon => {
-          icon.innerHTML = '<i class="fa-solid fa-sun text-yellow-400"></i>';
-        });
-        themeTexts.forEach(text => {
-          text.textContent = 'מצב בהיר';
-        });
-        localStorage.setItem('theme', 'dark');
-      } else {
-        htmlEl.classList.remove('dark');
-        themeIcons.forEach(icon => {
-          icon.innerHTML = '<i class="fa-solid fa-moon"></i>';
-        });
-        themeTexts.forEach(text => {
-          text.textContent = 'מצב כהה';
-        });
-        localStorage.setItem('theme', 'light');
-      }
-    }
-    
-    function toggleDarkMode() {
-      const isCurrentlyDark = document.documentElement.classList.contains('dark');
-      setDarkTheme(!isCurrentlyDark);
-    }
-    
-    // Initialize theme configuration immediately
-    initTheme();
-
-    // Clipboard Copy helper
-    function copyTickers(button, tickerList) {
-      const tempInput = document.createElement("input");
-      tempInput.value = tickerList;
-      document.body.appendChild(tempInput);
-      tempInput.select();
-      
-      try {
-        document.execCommand('copy');
-        showToast("הסימבולים הועתקו ללוח המחשב!");
-        
-        const icon = button.querySelector('i');
-        icon.className = 'fa-solid fa-check text-green-500';
-        setTimeout(() => {
-          icon.className = 'fa-regular fa-copy';
-        }, 2000);
-      } catch (err) {
-        showToast("שגיאה בהעתקה, אנא העתק ידנית.");
-      }
-      document.body.removeChild(tempInput);
-    }
-
-    // Success Toast Display
-    function showToast(message) {
-      const toast = document.getElementById('toast');
-      const toastMsg = document.getElementById('toastMessage');
-      toastMsg.innerText = message;
-      
-      toast.classList.remove('opacity-0', 'translate-y-10', 'pointer-events-none');
-      toast.classList.add('opacity-100', 'translate-y-0');
-      
-      setTimeout(() => {
-        toast.classList.remove('opacity-100', 'translate-y-0');
-        toast.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
-      }, 3000);
-    }
-
-    // Live Search & Filter Logic
-    function performSearch() {
-      const searchInput = document.getElementById('searchInput');
-      const query = searchInput.value.trim().toUpperCase();
-      const clearBtn = document.getElementById('clearSearchBtn');
-      const cards = document.querySelectorAll('.sector-card');
-      const feedbackBanner = document.getElementById('searchFeedback');
-      const feedbackText = document.getElementById('searchFeedbackText');
-      const emptyState = document.getElementById('emptySearchState');
-      
-      if (query.length > 0) {
-        clearBtn.classList.remove('hidden');
-        feedbackBanner.classList.remove('hidden');
-        feedbackBanner.classList.add('flex');
-        feedbackText.innerText = `מציג תוצאות עבור החיפוש: "${query}"`;
-      } else {
-        clearBtn.classList.add('hidden');
-        feedbackBanner.classList.add('hidden');
-        feedbackBanner.classList.remove('flex');
-        clearHighlights();
-        showAllCards();
-        return;
-      }
-
-      let visibleCount = 0;
-
-      cards.forEach(card => {
-        const titleText = card.querySelector('.sector-title').innerText.toUpperCase();
-        const descriptionText = card.querySelector('p').innerText.toUpperCase();
-        const tickers = card.querySelectorAll('.ticker');
-        
-        let hasMatchingTicker = false;
-        
-        tickers.forEach(ticker => {
-          const symbol = ticker.innerText.trim().toUpperCase();
-          if (symbol.includes(query)) {
-            ticker.classList.add('ticker-highlight');
-            hasMatchingTicker = true;
-          } else {
-            ticker.classList.remove('ticker-highlight');
-          }
-        });
-
-        const matchesText = titleText.includes(query) || descriptionText.includes(query);
-        
-        if (matchesText || hasMatchingTicker) {
-          card.classList.remove('hidden');
-          visibleCount++;
-        } else {
-          card.classList.add('hidden');
-        }
-      });
-
-      if (visibleCount === 0) {
-        emptyState.classList.remove('hidden');
-        emptyState.classList.add('flex');
-      } else {
-        emptyState.classList.add('hidden');
-        emptyState.classList.remove('flex');
-      }
-    }
-
-    function clearSearch() {
-      const searchInput = document.getElementById('searchInput');
-      searchInput.value = '';
-      document.getElementById('clearSearchBtn').classList.add('hidden');
-      document.getElementById('searchFeedback').classList.add('hidden');
-      document.getElementById('searchFeedback').classList.remove('flex');
-      document.getElementById('emptySearchState').classList.add('hidden');
-      document.getElementById('emptySearchState').classList.remove('flex');
-      clearHighlights();
-      showAllCards();
-    }
-
-    function clearHighlights() {
-      const highlightedTickers = document.querySelectorAll('.ticker-highlight');
-      highlightedTickers.forEach(t => t.classList.remove('ticker-highlight'));
-    }
-
-    function showAllCards() {
-      const cards = document.querySelectorAll('.sector-card');
-      cards.forEach(card => card.classList.remove('hidden'));
-    }
-  </script>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=SPCX" rel="noopener noreferrer" target="_blank">SPCX</a></div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-17">
+<div class="sector-head">
+<span class="num">17</span>
+<h2>eVTOL / Air Mobility</h2>
+</div>
+<p>קבוצת מוניות מעופפות / תעופה חשמלית. בפועל עיקר הטרייד הוא JOBY ו־ACHR.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=JOBY" rel="noopener noreferrer" target="_blank">JOBY</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=ACHR" rel="noopener noreferrer" target="_blank">ACHR</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=EVTL" rel="noopener noreferrer" target="_blank">EVTL</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=BLDE" rel="noopener noreferrer" target="_blank">BLDE</a>
+</div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-18">
+<div class="sector-head">
+<span class="num">18</span>
+<h2>Drones / Defense Tech</h2>
+</div>
+<p>רחפנים, מערכות אוטונומיות וביטחון טכנולוגי.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=RCAT" rel="noopener noreferrer" target="_blank">RCAT</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=UMAC" rel="noopener noreferrer" target="_blank">UMAC</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=PDYN" rel="noopener noreferrer" target="_blank">PDYN</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=AVAV" rel="noopener noreferrer" target="_blank">AVAV</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=KTOS" rel="noopener noreferrer" target="_blank">KTOS</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=ONDS" rel="noopener noreferrer" target="_blank">ONDS</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=AIRO" rel="noopener noreferrer" target="_blank">AIRO</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=SWMR" rel="noopener noreferrer" target="_blank">SWMR</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=AVEX" rel="noopener noreferrer" target="_blank">AVEX</a></div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-19">
+<div class="sector-head">
+<span class="num">19</span>
+<h2>Defense / Aerospace</h2>
+</div>
+<p>ביטחוניות גדולות ותעופה. KTOS ו־AVAV יותר מומנטום, הגדולות יותר עוגן.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=LMT" rel="noopener noreferrer" target="_blank">LMT</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=RTX" rel="noopener noreferrer" target="_blank">RTX</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=NOC" rel="noopener noreferrer" target="_blank">NOC</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=GD" rel="noopener noreferrer" target="_blank">GD</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=HWM" rel="noopener noreferrer" target="_blank">HWM</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=KTOS" rel="noopener noreferrer" target="_blank">KTOS</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=AVAV" rel="noopener noreferrer" target="_blank">AVAV</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=BA" rel="noopener noreferrer" target="_blank">BA</a>
+</div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-20">
+<div class="sector-head">
+<span class="num">20</span>
+<h2>EV / Batteries / Autonomy</h2>
+</div>
+<p>רכב חשמלי, סוללות, אוטונומיה וליידאר.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=TSLA" rel="noopener noreferrer" target="_blank">TSLA</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=RIVN" rel="noopener noreferrer" target="_blank">RIVN</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=LCID" rel="noopener noreferrer" target="_blank">LCID</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=QS" rel="noopener noreferrer" target="_blank">QS</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=ENVX" rel="noopener noreferrer" target="_blank">ENVX</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=CHPT" rel="noopener noreferrer" target="_blank">CHPT</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=OUST" rel="noopener noreferrer" target="_blank">OUST</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=LAZR" rel="noopener noreferrer" target="_blank">LAZR</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=AMPX" rel="noopener noreferrer" target="_blank">AMPX</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=MBLY" rel="noopener noreferrer" target="_blank">MBLY</a>
+</div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-21">
+<div class="sector-head">
+<span class="num">21</span>
+<h2>Biotech Momentum</h2>
+</div>
+<p>ביוטק תנודתי, זז לפי FDA, ניסויים, M&amp;A ונרטיב סיכון.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=XBI" rel="noopener noreferrer" target="_blank">XBI</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=MRNA" rel="noopener noreferrer" target="_blank">MRNA</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=BNTX" rel="noopener noreferrer" target="_blank">BNTX</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=SRPT" rel="noopener noreferrer" target="_blank">SRPT</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=BEAM" rel="noopener noreferrer" target="_blank">BEAM</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=CRSP" rel="noopener noreferrer" target="_blank">CRSP</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=RXRX" rel="noopener noreferrer" target="_blank">RXRX</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=ALMS" rel="noopener noreferrer" target="_blank">ALMS</a>
+</div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-22">
+<div class="sector-head">
+<span class="num">22</span>
+<h2>GLP-1 / Pharma Growth</h2>
+</div>
+<p>קבוצת השמנה / GLP-1 / פארמה צמיחה.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=LLY" rel="noopener noreferrer" target="_blank">LLY</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=NVO" rel="noopener noreferrer" target="_blank">NVO</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=VKTX" rel="noopener noreferrer" target="_blank">VKTX</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=AMGN" rel="noopener noreferrer" target="_blank">AMGN</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=ALT" rel="noopener noreferrer" target="_blank">ALT</a>
+</div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-23">
+<div class="sector-head">
+<span class="num">23</span>
+<h2>Healthcare / Pharma Growth</h2>
+</div>
+<p>פחות קבוצת טיסה, יותר קבוצת השוואה סקטוריאלית לבריאות גדולה וצמיחה רפואית.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=XLV" rel="noopener noreferrer" target="_blank">XLV</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=LLY" rel="noopener noreferrer" target="_blank">LLY</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=NVO" rel="noopener noreferrer" target="_blank">NVO</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=AMGN" rel="noopener noreferrer" target="_blank">AMGN</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=ISRG" rel="noopener noreferrer" target="_blank">ISRG</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=TMO" rel="noopener noreferrer" target="_blank">TMO</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=UNH" rel="noopener noreferrer" target="_blank">UNH</a>
+</div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-24">
+<div class="sector-head">
+<span class="num">24</span>
+<h2>Meme / High Volatility</h2>
+</div>
+<p>מניות תנודתיות מאוד, נעות לפי סנטימנט, short interest, retail flow ו־options.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=GME" rel="noopener noreferrer" target="_blank">GME</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=AMC" rel="noopener noreferrer" target="_blank">AMC</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=DJT" rel="noopener noreferrer" target="_blank">DJT</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=CVNA" rel="noopener noreferrer" target="_blank">CVNA</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=RDDT" rel="noopener noreferrer" target="_blank">RDDT</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=UPST" rel="noopener noreferrer" target="_blank">UPST</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=HOOD" rel="noopener noreferrer" target="_blank">HOOD</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=SMCI" rel="noopener noreferrer" target="_blank">SMCI</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=MSTR" rel="noopener noreferrer" target="_blank">MSTR</a>
+</div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-25">
+<div class="sector-head">
+<span class="num">25</span>
+<h2>IPO / Recent Momentum</h2>
+</div>
+<p>מניות הנפקה / חדשות יחסית / מומנטום סביב סיפור חדש.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=SPCX" rel="noopener noreferrer" target="_blank">SPCX</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=RDDT" rel="noopener noreferrer" target="_blank">RDDT</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=ARM" rel="noopener noreferrer" target="_blank">ARM</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=CAVA" rel="noopener noreferrer" target="_blank">CAVA</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=RBRK" rel="noopener noreferrer" target="_blank">RBRK</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=ALAB" rel="noopener noreferrer" target="_blank">ALAB</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=TEM" rel="noopener noreferrer" target="_blank">TEM</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=CRWV" rel="noopener noreferrer" target="_blank">CRWV</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=HSAI" rel="noopener noreferrer" target="_blank">HSAI</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=CRCL" rel="noopener noreferrer" target="_blank">CRCL</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=BLSH" rel="noopener noreferrer" target="_blank">BLSH</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=FIGR" rel="noopener noreferrer" target="_blank">FIGR</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=AIRO" rel="noopener noreferrer" target="_blank">AIRO</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=SWMR" rel="noopener noreferrer" target="_blank">SWMR</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=AVEX" rel="noopener noreferrer" target="_blank">AVEX</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=QNT" rel="noopener noreferrer" target="_blank">QNT</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=INFQ" rel="noopener noreferrer" target="_blank">INFQ</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=CBRS" rel="noopener noreferrer" target="_blank">CBRS</a></div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-26">
+<div class="sector-head">
+<span class="num">26</span>
+<h2>China ADR Momentum</h2>
+</div>
+<p>מניות סין בארה״ב, נעות יחד לפי רגולציה סינית, stimulus, יחסי ארה״ב־סין וסנטימנט ADR.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=BABA" rel="noopener noreferrer" target="_blank">BABA</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=JD" rel="noopener noreferrer" target="_blank">JD</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=PDD" rel="noopener noreferrer" target="_blank">PDD</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=BIDU" rel="noopener noreferrer" target="_blank">BIDU</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=NIO" rel="noopener noreferrer" target="_blank">NIO</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=XPEV" rel="noopener noreferrer" target="_blank">XPEV</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=LI" rel="noopener noreferrer" target="_blank">LI</a>
+</div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-27">
+<div class="sector-head">
+<span class="num">27</span>
+<h2>Fintech / Brokers / Payments</h2>
+</div>
+<p>פינטק, ברוקרים, תשלומים ואשראי צרכני.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=HOOD" rel="noopener noreferrer" target="_blank">HOOD</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=SOFI" rel="noopener noreferrer" target="_blank">SOFI</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=SQ" rel="noopener noreferrer" target="_blank">SQ</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=PYPL" rel="noopener noreferrer" target="_blank">PYPL</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=AFRM" rel="noopener noreferrer" target="_blank">AFRM</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=UPST" rel="noopener noreferrer" target="_blank">UPST</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=COIN" rel="noopener noreferrer" target="_blank">COIN</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=FIGR" rel="noopener noreferrer" target="_blank">FIGR</a></div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-28">
+<div class="sector-head">
+<span class="num">28</span>
+<h2>Gaming / AdTech</h2>
+</div>
+<p>גיימינג, פרסום, אפליקציות וצמיחת משתמשים.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=PLTK" rel="noopener noreferrer" target="_blank">PLTK</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=APP" rel="noopener noreferrer" target="_blank">APP</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=RBLX" rel="noopener noreferrer" target="_blank">RBLX</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=U" rel="noopener noreferrer" target="_blank">U</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=TTWO" rel="noopener noreferrer" target="_blank">TTWO</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=ZETA" rel="noopener noreferrer" target="_blank">ZETA</a></div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-29">
+<div class="sector-head">
+<span class="num">29</span>
+<h2>Israel Tech / Software</h2>
+</div>
+<p>מניות ישראליות / ישראל־קשורות. קבוצה פחות טהורה, אבל שימושית להשוואה.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=NICE" rel="noopener noreferrer" target="_blank">NICE</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=PLTK" rel="noopener noreferrer" target="_blank">PLTK</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=MBLY" rel="noopener noreferrer" target="_blank">MBLY</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=VRNS" rel="noopener noreferrer" target="_blank">VRNS</a>
+</div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-30">
+<div class="sector-head">
+<span class="num">30</span>
+<h2>Copper / Metals</h2>
+</div>
+<p>נעות סביב נחושת, תשתיות, חשמל, AI grid, סין ותעשייה.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=FCX" rel="noopener noreferrer" target="_blank">FCX</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=ICOP" rel="noopener noreferrer" target="_blank">ICOP</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=SCCO" rel="noopener noreferrer" target="_blank">SCCO</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=TECK" rel="noopener noreferrer" target="_blank">TECK</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=BHP" rel="noopener noreferrer" target="_blank">BHP</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=RIO" rel="noopener noreferrer" target="_blank">RIO</a>
+</div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-31">
+<div class="sector-head">
+<span class="num">31</span>
+<h2>Solar / Renewables</h2>
+</div>
+<p>סולאר, ריבית, רגולציה וביקוש אנרגיה.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=FSLR" rel="noopener noreferrer" target="_blank">FSLR</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=ENPH" rel="noopener noreferrer" target="_blank">ENPH</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=SEDG" rel="noopener noreferrer" target="_blank">SEDG</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=RUN" rel="noopener noreferrer" target="_blank">RUN</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=NOVA" rel="noopener noreferrer" target="_blank">NOVA</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=ARRY" rel="noopener noreferrer" target="_blank">ARRY</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=TAN" rel="noopener noreferrer" target="_blank">TAN</a>
+</div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-32">
+<div class="sector-head">
+<span class="num">32</span>
+<h2>Energy / Oil &amp; Gas</h2>
+</div>
+<p>נפט, גז, זיקוק ושירותי אנרגיה.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=XOM" rel="noopener noreferrer" target="_blank">XOM</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=CVX" rel="noopener noreferrer" target="_blank">CVX</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=OXY" rel="noopener noreferrer" target="_blank">OXY</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=SLB" rel="noopener noreferrer" target="_blank">SLB</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=HAL" rel="noopener noreferrer" target="_blank">HAL</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=COP" rel="noopener noreferrer" target="_blank">COP</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=EOG" rel="noopener noreferrer" target="_blank">EOG</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=VLO" rel="noopener noreferrer" target="_blank">VLO</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=SSL" rel="noopener noreferrer" target="_blank">SSL</a>
+</div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-33">
+<div class="sector-head">
+<span class="num">33</span>
+<h2>Shipping / Transport</h2>
+</div>
+<p>ספנות ותובלה, נעות לפי תעריפי הובלה, סחר גלובלי וגיאופוליטיקה.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=ZIM" rel="noopener noreferrer" target="_blank">ZIM</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=MATX" rel="noopener noreferrer" target="_blank">MATX</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=SBLK" rel="noopener noreferrer" target="_blank">SBLK</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=GNK" rel="noopener noreferrer" target="_blank">GNK</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=DAC" rel="noopener noreferrer" target="_blank">DAC</a>
+</div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-34">
+<div class="sector-head">
+<span class="num">34</span>
+<h2>Banks / Financials</h2>
+</div>
+<p>בנקים גדולים ופיננסים.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=JPM" rel="noopener noreferrer" target="_blank">JPM</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=BAC" rel="noopener noreferrer" target="_blank">BAC</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=GS" rel="noopener noreferrer" target="_blank">GS</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=MS" rel="noopener noreferrer" target="_blank">MS</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=C" rel="noopener noreferrer" target="_blank">C</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=WFC" rel="noopener noreferrer" target="_blank">WFC</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=SCHW" rel="noopener noreferrer" target="_blank">SCHW</a>
+</div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<section class="sector" id="sector-35">
+<div class="sector-head">
+<span class="num">35</span>
+<h2>Regional Banks</h2>
+</div>
+<p>בנקים אזוריים, רגישים לריבית, אשראי, פיקדונות ונדל״ן מסחרי.</p>
+<div class="tickers">
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=KRE" rel="noopener noreferrer" target="_blank">KRE</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=FLG" rel="noopener noreferrer" target="_blank">FLG</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=WAL" rel="noopener noreferrer" target="_blank">WAL</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=BANC" rel="noopener noreferrer" target="_blank">BANC</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=ZION" rel="noopener noreferrer" target="_blank">ZION</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=CMA" rel="noopener noreferrer" target="_blank">CMA</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=KEY" rel="noopener noreferrer" target="_blank">KEY</a>
+<a class="ticker" href="https://www.tradingview.com/chart/?symbol=TFC" rel="noopener noreferrer" target="_blank">TFC</a>
+</div>
+<div class="back-wrap"><a class="back-link" href="#core-groups">חזרה לקבוצות המרכזיות ↑</a></div></section>
+<footer class="footer-meta">מאת: דורון שרייבמן<div class="footer-disclosure">גילוי נאות: הרשימה מיועדת לצורכי מידע, מעקב והשוואה יחסית בלבד, אינה מהווה ייעוץ השקעות, שיווק השקעות או המלצה לביצוע פעולה כלשהי בניירות ערך.</div></footer>
+</div>
 </body>
 </html>
